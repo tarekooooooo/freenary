@@ -97,7 +97,7 @@ const closeButtonName = (locale: Locale | null): string => {
     )?.textContent ?? "";
 
   view.unmount();
-      overwriteGetLocale(() => "en");
+  overwriteGetLocale(() => "en");
 
   return name;
 };
@@ -137,7 +137,7 @@ const railTooltipLines = (locale: Locale | null): string[] => {
   );
 
   view.unmount();
-    overwriteGetLocale(() => "en");
+  overwriteGetLocale(() => "en");
 
   return lines;
 };
