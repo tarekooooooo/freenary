@@ -30,7 +30,7 @@ describe("upcomingPayments", () => {
 
   it("rolls a next date already behind today onto its next slot rather than reporting it as due now", () => {
     const staleNextExpected = item({
-      nextExpected: new Date(2026, 7, 3).toISOString(),
+      nextExpected: "2026-08-03T00:00:00.000Z",
     });
 
     const [first] = upcomingPayments([staleNextExpected], asOf, HORIZON_DAYS);
@@ -40,7 +40,7 @@ describe("upcomingPayments", () => {
   });
 
   it("counts a payment due today as zero days away", () => {
-    const today = item({ nextExpected: new Date(2026, 8, 8).toISOString() });
+    const today = item({ nextExpected: "2026-09-08T00:00:00.000Z" });
 
     expect(upcomingPayments([today], asOf, HORIZON_DAYS)[0]?.daysAway).toBe(0);
   });
@@ -49,7 +49,7 @@ describe("upcomingPayments", () => {
     const weekly = item({
       frequency: "weekly",
       intervalDays: 7,
-      nextExpected: new Date(2026, 8, 9).toISOString(),
+      nextExpected: "2026-09-09T00:00:00.000Z",
     });
 
     expect(
@@ -58,10 +58,10 @@ describe("upcomingPayments", () => {
   });
 
   it("excludes an occurrence past the horizon and keeps one on it", () => {
-    const onEdge = item({ nextExpected: new Date(2026, 9, 8).toISOString() });
+    const onEdge = item({ nextExpected: "2026-10-08T00:00:00.000Z" });
     const beyond = item({
       merchantKey: "gym",
-      nextExpected: new Date(2026, 9, 9).toISOString(),
+      nextExpected: "2026-10-09T00:00:00.000Z",
     });
 
     expect(upcomingPayments([onEdge, beyond], asOf, HORIZON_DAYS)).toHaveLength(
@@ -70,11 +70,11 @@ describe("upcomingPayments", () => {
   });
 
   it("orders occurrences from several patterns by date", () => {
-    const later = item({ nextExpected: new Date(2026, 8, 20).toISOString() });
+    const later = item({ nextExpected: "2026-09-20T00:00:00.000Z" });
     const sooner = item({
       merchantKey: "rent",
       merchantName: "Landlord",
-      nextExpected: new Date(2026, 8, 10).toISOString(),
+      nextExpected: "2026-09-10T00:00:00.000Z",
     });
 
     expect(
@@ -86,7 +86,7 @@ describe("upcomingPayments", () => {
     const stalledAYearBackOnAFiveDayCadence = item({
       frequency: "weekly",
       intervalDays: 5,
-      nextExpected: new Date(2025, 8, 15).toISOString(),
+      nextExpected: "2025-09-15T00:00:00.000Z",
     });
 
     expect(
