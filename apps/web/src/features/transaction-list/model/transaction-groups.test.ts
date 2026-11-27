@@ -1,4 +1,4 @@
-import { afterAll, afterEach, expect, it, setSystemTime } from "bun:test";
+import { afterAll, afterEach, beforeEach, expect, it, setSystemTime } from "bun:test";
 
 import { m } from "@/paraglide/messages.js";
 
@@ -11,8 +11,11 @@ import {
 const FIRST_OF_OCTOBER = "2026-10-01T00:00:00.000Z";
 const HOST_TZ = process.env.TZ;
 
-afterEach(() => {
+beforeEach(() => {
   process.env.TZ = "America/Martinique";
+});
+
+afterEach(() => {
   setSystemTime();
 });
 
@@ -23,8 +26,6 @@ afterAll(() => {
     process.env.TZ = HOST_TZ;
   }
 });
-
-process.env.TZ = "America/Martinique";
 
 it("groups a bank date of the 1st under the 1st west of UTC", () => {
   expect(groupKey(FIRST_OF_OCTOBER, "day")).toBe("2026-10-01");
