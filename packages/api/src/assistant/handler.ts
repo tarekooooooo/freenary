@@ -1,5 +1,6 @@
 import { requestSession } from "@freenary/auth";
 import { AI_CHAT_RATE_LIMIT } from "@freenary/auth/policy";
+import prisma from "@freenary/db";
 import { createRouterClient, ORPCError } from "@orpc/server";
 import type { UIMessage } from "ai";
 import { convertToModelMessages, stepCountIs, streamText } from "ai";
@@ -16,6 +17,7 @@ import {
   conversationMessages,
   ownedConversation,
 } from "./conversation";
+import { assistantStreamErrorMessage } from "./error-code";
 import { assistantSystemPrompt, promptDashboards } from "./prompt";
 import { assistantModel } from "./provider";
 import { assistantTools } from "./tools";
@@ -198,6 +200,11 @@ export const handleAssistantChat = async ({
   );
 
   const originalMessages = [...history, question];
+  const operator = await prisma.user.findFirst({
+    orderBy: { createdAt: "asc" },
+  select: { id: true },
+  });
+  const isOperator = operator?.id === session.user.id;
 
   const ai = createAILogger(log);
 
@@ -220,6 +227,11 @@ export const handleAssistantChat = async ({
 
   return stream.toUIMessageStreamResponse({
     generateMessageId: () => answerId,
+    onError: (error) => {
+        console.error("Assistant stream failed", error);
+
+      return assistantStreamErrorMessage(error, isOperator);
+    },
     onFinish: ({ finishReason, isAborted, responseMessage }) => {
       const parts = answerableParts(responseMessage.parts);
 
