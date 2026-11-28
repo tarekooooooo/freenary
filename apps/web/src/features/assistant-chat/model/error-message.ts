@@ -9,19 +9,19 @@ export const assistantErrorMessage = (message: string): string => {
   }
 
   if (message.includes("assistant_unreachable")) {
-      return m.assistant_error_unreachable();
+    return m.assistant_error_unreachable();
   }
 
   if (message.includes("assistant_timeout")) {
-      return m.assistant_error_timeout();
+    return m.assistant_error_timeout();
   }
 
   if (message.includes("assistant_rejected")) {
-      return m.assistant_error_rejected();
+    return m.assistant_error_rejected();
   }
 
   if (message.includes("assistant_failed")) {
-      return m.assistant_error_failed();
+    return m.assistant_error_failed();
   }
 
   if (message.includes("unavailable")) {
@@ -50,10 +50,10 @@ export const assistantErrorMessage = (message: string): string => {
 };
 
 export const assistantErrorDetail = (message: string): string | null => {
-    const separator = message.indexOf(" :: ");
+  const separator = message.indexOf(" :: ");
 
   if (separator === -1) {
-      return null;
+    return null;
   }
 
   return message.slice(separator + 4);
