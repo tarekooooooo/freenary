@@ -1,4 +1,4 @@
-export { assistantErrorMessage } from "./model/error-message";
+export { assistantErrorDetail, assistantErrorMessage } from "./model/error-message";
 export { rememberModel, SERVER_MODEL } from "./model/model-choice";
 export {
   type AssistantModelState,
